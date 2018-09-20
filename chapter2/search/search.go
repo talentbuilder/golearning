@@ -47,7 +47,7 @@ func Run(searchTerm string) {
 		waitGroup.Wait()
 
 		// Close the channel to signal to the Display
-		// function that we can exit the program.
+		// function that we can exit the program.Search
 		close(results)
 	}()
 
