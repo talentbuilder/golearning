@@ -18,9 +18,9 @@ type Matcher interface {
 
 // Match is launched as a goroutine for each individual feed to run
 // searches concurrently.
-func Match(matcher Matcher, feed *Feed, searchTerm string, results chan<- *Result) {
+func Match(matcher Matcher, feed *Feed, searchTerm string, results chan<- *Result) { //注意管道类型的这种写法
 	// Perform the search against the specified matcher.
-	searchResults, err := matcher.Search(feed, searchTerm)
+	searchResults, err := matcher.Search(feed, searchTerm) //在feed中搜索对应的term
 	if err != nil {
 		log.Println(err)
 		return
@@ -28,7 +28,7 @@ func Match(matcher Matcher, feed *Feed, searchTerm string, results chan<- *Resul
 
 	// Write the results to the channel.
 	for _, result := range searchResults {
-		results <- result
+		results <- result //搜索结果写入管道
 	}
 }
 

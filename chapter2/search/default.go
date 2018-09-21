@@ -9,7 +9,7 @@ func init() {
 	Register("default", matcher)
 }
 
-// Search implements the behavior for the default matcher.
+// Search implements the behavior for the default matcher.  //默认defaultMatcher，需要实现search
 func (m defaultMatcher) Search(feed *Feed, searchTerm string) ([]*Result, error) {
 	return nil, nil
 }

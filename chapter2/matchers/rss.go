@@ -11,6 +11,7 @@ import (
 	"github/golearning/chapter2/search"
 )
 
+//仔细观察这个结构体，结构体中包含结构体，字段有些是结构体的
 type (
 	// item defines the fields associated with the item tag
 	// in the rss document.
@@ -58,7 +59,7 @@ type (
 )
 
 // rssMatcher implements the Matcher interface.
-type rssMatcher struct{}
+type rssMatcher struct{} //将会实现Matcher接口，实现Search方法，只要是Matcher的一种，就要实现对应的接口
 
 // init registers the matcher with the program.
 func init() {
@@ -80,12 +81,12 @@ func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Resu
 
 	for _, channelItem := range document.Channel.Item {
 		// Check the title for the search term.
-		matched, err := regexp.MatchString(searchTerm, channelItem.Title)
+		matched, err := regexp.MatchString(searchTerm, channelItem.Title) //使用正则和标题匹配
 		if err != nil {
 			return nil, err
 		}
 
-		// If we found a match save the result.
+		// If we found a match save the result. 搜索匹配的话就append到结果切片中，感觉像指针直接串联的链表
 		if matched {
 			results = append(results, &search.Result{
 				Field:   "Title",
@@ -94,7 +95,7 @@ func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Resu
 		}
 
 		// Check the description for the search term.
-		matched, err = regexp.MatchString(searchTerm, channelItem.Description)
+		matched, err = regexp.MatchString(searchTerm, channelItem.Description) //匹配描述
 		if err != nil {
 			return nil, err
 		}
@@ -118,7 +119,7 @@ func (m rssMatcher) retrieve(feed *search.Feed) (*rssDocument, error) {
 	}
 
 	// Retrieve the rss feed document from the web.
-	resp, err := http.Get(feed.URI)
+	resp, err := http.Get(feed.URI) //http方式访问feed文件
 	if err != nil {
 		return nil, err
 	}
@@ -135,6 +136,6 @@ func (m rssMatcher) retrieve(feed *search.Feed) (*rssDocument, error) {
 	// Decode the rss feed document into our struct type.
 	// We don't need to check for errors, the caller can do this.
 	var document rssDocument
-	err = xml.NewDecoder(resp.Body).Decode(&document)
+	err = xml.NewDecoder(resp.Body).Decode(&document) //xml解析，感觉好智能
 	return &document, err
 }
